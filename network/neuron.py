@@ -23,5 +23,5 @@ class Neuron(NObject):
     def check(self):
         return True
 
-    def __repr(self):
-        return "<Neuron{}".format(list(self._weights))
+    def __repr__(self):
+        return "<Neuron{}".format(["%.2e" % weig for weig in self._weights])
