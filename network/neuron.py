@@ -38,6 +38,10 @@ class Neuron(NObject):
         ])
 
     @property
+    def bias(self):
+        return self._bias
+
+    @property
     def weights(self):
         return self._weights
 
@@ -58,4 +62,7 @@ class Neuron(NObject):
         return np.dot(self.weights, vector) + self._bias
 
     def __repr__(self):
-        return "<Neuron{}".format(["%.2e" % weig for weig in self.weights])
+        return (
+            "<Neuron {}+{:.2e}>"
+            .format(["%.2e" % weig for weig in self.weights], self.bias)
+        )
