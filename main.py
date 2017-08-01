@@ -1,5 +1,6 @@
+import numpy as np
+import random
 from network import NNetwork, HNLayer
-
 
 
 def cost_fun(*args, **kwargs):
@@ -14,8 +15,8 @@ def act_der(value):
     return 1
 
 
-def init_fun():
-    return 0.1
+def init_fun(i):
+    return random.random()
 
 
 network = NNetwork(dim_in=3, dim_out=2, cost_fun=cost_fun)
@@ -32,4 +33,7 @@ layer_2 = HNLayer(dim_in=3, nN=2, n_kwargs=n_kwargs)
 network.add(layer_1)
 network.add(layer_2)
 
+network.check()
 network.pprint()
+
+print(network.forward(np.array([1, 1, 1])))

@@ -15,19 +15,35 @@ class NObject(object):
     def dim_out(self):
         return self._dim_out
 
+    # To Implement
+
     def check(self):
+        """Check whether object correctly defined."""
         raise NotImplementedError
+
+    def _backward(self, *args, **kwargs):
+        raise NotImplementedError
+
+    def _forward(self, vector):
+        return NotImplementedError
+
+    def _update(self, *args, **kwargs):
+        return NotImplementedError
+
+    # Utils
 
     def backward(self, *args, **kwargs):
-        raise NotImplementedError
+        return self._backward(*args, **kwargs)
 
-    def foward(self, *args, **kwargs):
-        raise NotImplementedError
+    def forward(self, vector):
+        """Forward vector to build output."""
+        return self._forward(vector)
 
-    def update(self):
-        raise NotImplementedError
+    def update(self, *args, **kwargs):
+        return self._update(*args, **kwargs)
 
-    # Pretty display
+    # Display
+
     def __repr__(self):
         return (
             "<{cls} | dim {dim_in} to {dim_out}>"
@@ -42,9 +58,11 @@ class NObject(object):
         return repr(self)
 
     def pprint(self):
+        """Pretty print."""
         print(self.pstring())
 
     def pstring(self):
+        """Create pretty string."""
         return repr(self)
 
 
@@ -57,9 +75,11 @@ class NContainer(NObject):
         self._elem_cls = elem_cls
 
     def add(self, elem):
+        """Add elem to elements."""
         self._elements.append(elem)
 
     def insert(self, index, elem):
+        """Insert elem in elements."""
         self._elements.insert(index, elem)
 
     @property
@@ -70,22 +90,13 @@ class NContainer(NObject):
     def nE(self):
         return len(self._elements)
 
-    def backward(self, *args, **kwargs):
+    def _backward(self, *args, **kwargs):
         output = []
         for elem in iter(self):
             output.append(elem.backard(*args, **kwargs))
         return np.array(output)
 
-    def forward(self, vector):
-        assert len(vector) == self.dim_in
-        int_vect = vector
-        for elem in iter(self):
-            int_vect = elem.forward(int_vect)
-        output = int_vect
-        assert len(output) == self.dim_out
-        return output
-
-    def update(self):
+    def _update(self, *args, **kargs):
         for elem in iter(self):
             elem.update()
 
@@ -103,6 +114,7 @@ class NContainer(NObject):
         )
 
     def pstring(self):
+        """Pretty indented string."""
         return (
             str(self)
             + (

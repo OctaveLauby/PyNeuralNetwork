@@ -19,6 +19,13 @@ class NNetwork(NContainer):
         assert self.dim_out == excepted_dim
         return True
 
+    def _forward(self, vector):
+        int_vect = vector
+        for elem in iter(self):
+            int_vect = elem.forward(int_vect)
+        output = int_vect
+        return output
+
     @property
     def nL(self):
         return self.nE
