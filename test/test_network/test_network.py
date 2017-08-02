@@ -2,14 +2,15 @@ import numpy as np
 
 from network.layer import HNLayer
 from network.network import NNetwork
+from pcollections.functions import euclidean_dist, euclidean_dist_jac
 
 
 def test_NNetwork():
 
     bias = 0.5
 
-    def cost_fun(*args, **kwargs):
-        raise NotImplementedError
+    cost_fun = euclidean_dist
+    cost_jac = euclidean_dist_jac
 
     def act_fun(value):
         return 2 * value
@@ -22,7 +23,9 @@ def test_NNetwork():
             return bias
         return i
 
-    network = NNetwork(dim_in=2, dim_out=1, cost_fun=cost_fun)
+    network = NNetwork(
+        dim_in=2, dim_out=1, cost_fun=cost_fun, cost_jac=cost_jac
+    )
 
     n_kwargs = {
         'dim_in': 2,

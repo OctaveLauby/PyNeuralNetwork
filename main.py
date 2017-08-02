@@ -1,10 +1,12 @@
 import numpy as np
 import random
+
+from pcollections.functions import euclidean_dist, euclidean_dist_jac
 from network import NNetwork, HNLayer
 
 
-def cost_fun(*args, **kwargs):
-    raise NotImplementedError
+cost_fun = euclidean_dist
+cost_jac = euclidean_dist_jac
 
 
 def act_fun(value):
@@ -19,7 +21,7 @@ def init_fun(i):
     return random.random()
 
 
-network = NNetwork(dim_in=3, dim_out=2, cost_fun=cost_fun)
+network = NNetwork(dim_in=3, dim_out=2, cost_fun=cost_fun, cost_jac=cost_jac)
 
 n_kwargs = {
     'dim_in': 3,
