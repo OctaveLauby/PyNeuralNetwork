@@ -28,13 +28,12 @@ def test_NNetwork():
     )
 
     n_kwargs = {
-        'dim_in': 2,
         'act_fun': act_fun,
         'act_der': act_der,
         'init_fun': init_fun,
     }
-    layer_1 = HNLayer(dim_in=2, nN=2, n_kwargs=n_kwargs)
-    layer_2 = HNLayer(dim_in=2, nN=1, n_kwargs=n_kwargs)
+    layer_1 = HNLayer(dim_in=2, nN=2, **n_kwargs)
+    layer_2 = HNLayer(dim_in=2, nN=1, **n_kwargs)
 
     network.add(layer_1)
     network.add(layer_2)

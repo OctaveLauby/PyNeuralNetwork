@@ -19,12 +19,11 @@ def test_HNLayer():
         return i
 
     n_kwargs = {
-        'dim_in': 2,
         'act_fun': act_fun,
         'act_der': act_der,
         'init_fun': init_fun,
     }
-    layer_1 = HNLayer(dim_in=2, nN=2, n_kwargs=n_kwargs)
+    layer_1 = HNLayer(dim_in=2, nN=2, **n_kwargs)
 
     x0 = np.array([1, 1])
     v1y = act_fun(np.dot(x0, np.array([0, 1])) + bias)

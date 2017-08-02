@@ -1,4 +1,4 @@
-import numpy as np
+from collections import defaultdict
 
 
 class NObject(object):
@@ -6,6 +6,9 @@ class NObject(object):
     def __init__(self, dim_in, dim_out):
         self._dim_in = dim_in
         self._dim_out = dim_out
+        self._memory = None
+
+        self.reset_memory()
 
     @property
     def dim_in(self):
@@ -15,32 +18,36 @@ class NObject(object):
     def dim_out(self):
         return self._dim_out
 
+    def read_memory(self, key, last=False):
+        """Return memory associated to key.
+
+        Args;
+            key (str)
+            last (boolean, optional): whether you want to access only last item
+        """
+        if last:
+            return self._memory[key][-1]
+        else:
+            return self._memory[key]
+
+    def reset_memory(self):
+        """Empty memory."""
+        self._memory = defaultdict(list)
+
     # To Implement
 
     def check(self):
         """Check whether object correctly defined."""
         raise NotImplementedError
 
-    def _backward(self, *args, **kwargs):
+    def backward(self, *args, **kwargs):
         raise NotImplementedError
 
-    def _forward(self, vector):
+    def forward(self, *args, **kwargs):
         return NotImplementedError
-
-    def _update(self, *args, **kwargs):
-        return NotImplementedError
-
-    # Utils
-
-    def backward(self, *args, **kwargs):
-        return self._backward(*args, **kwargs)
-
-    def forward(self, vector):
-        """Forward vector to build output."""
-        return self._forward(vector)
 
     def update(self, *args, **kwargs):
-        return self._update(*args, **kwargs)
+        return NotImplementedError
 
     # Display
 
@@ -90,13 +97,7 @@ class NContainer(NObject):
     def nE(self):
         return len(self._elements)
 
-    def _backward(self, *args, **kwargs):
-        output = []
-        for elem in iter(self):
-            output.append(elem.backard(*args, **kwargs))
-        return np.array(output)
-
-    def _update(self, *args, **kargs):
+    def update(self, *args, **kargs):
         for elem in iter(self):
             elem.update()
 

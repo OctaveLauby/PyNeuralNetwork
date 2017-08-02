@@ -29,7 +29,11 @@ class NNetwork(NContainer):
         assert self.dim_out == excepted_dim
         return True
 
-    def _forward(self, vector):
+    def backward(self, ):
+        raise NotImplementedError
+
+    def forward(self, vector):
+        self._last_input = vector
         int_vect = vector
         for elem in iter(self):
             int_vect = elem.forward(int_vect)

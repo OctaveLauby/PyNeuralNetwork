@@ -3,6 +3,10 @@ import numpy as np
 from .base import NObject
 
 
+class ShortCutted(Exception):
+    pass
+
+
 class Neuron(NObject):
     """Neuron."""
 
@@ -17,9 +21,6 @@ class Neuron(NObject):
                 float -> float
             init_fun (callable): function to create weights and bias
                 int (index of weight, -1 for bias) -> float
-
-
-
         """
         super().__init__(dim_in, 1)
         self._act_fun = act_fun
@@ -48,17 +49,54 @@ class Neuron(NObject):
     def check(self):
         return True
 
-    def _backward(self):
-        return self.weights * self._act_der(self._last_input)
-
-    def _forward(self, vector):
-        wsum = self._weighted_sum(vector)
-        return self._act_fun(wsum)
-
-    def _update(self, *args, **kargs):
+    def backward(self):
+        # return self.weights * self._act_der(self._last_input)
         raise NotImplementedError
 
-    def _weighted_sum(self, vector):
+    def forward(self, vector):
+        return self.compute(vector)
+
+    def update(self, *args, **kargs):
+        raise NotImplementedError
+
+    # Calculation
+
+    def compute(self, vector):
+        """Return """
+        wsum = self.weighted_sum(vector)
+        self._memory['wsum'].append(wsum)
+        return self._act_fun(wsum)
+
+    def delta(self, nl_i_weights, nl_delta, weighted_sum):
+        """Error due to neuron.
+
+        Args:
+            nl_i_weights (np.array, size=nN_nl):
+                weights of next layer regarding this neuron output
+            nl_delta (np.array, size=nN_nl):
+                deltas of next layer
+            weighted_sum (float):
+                weighted_sum that was calculated
+
+        Returns:
+            (float)
+        """
+        raise ShortCutted
+        return (
+            np.dot(nl_i_weights, nl_delta) * self._act_der(weighted_sum)
+        )
+
+    def rate_of_change_bias(self, delta):
+        """Rate of change with respect of bias."""
+        raise ShortCutted
+        return delta
+
+    def rate_of_change_weights(self, vector, delta_w):
+        """Rate of change with respect of weights."""
+        return vector * delta_w
+
+    def weighted_sum(self, vector):
+        """Weighted sum of vector comp."""
         return np.dot(self.weights, vector) + self._bias
 
     def __repr__(self):
