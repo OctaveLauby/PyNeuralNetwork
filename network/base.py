@@ -7,6 +7,7 @@ class NObject(object):
         self._dim_in = dim_in
         self._dim_out = dim_out
         self._memory = None
+        self._use_memory = True
 
         self.reset_memory()
 
@@ -18,9 +19,13 @@ class NObject(object):
     def dim_out(self):
         return self._dim_out
 
+    def use_memory(self, use=True):
+        self._use_memory = use
+
     def memorize(self, key, item):
         """Store item in memory at key."""
-        self._memory[key].append(item)
+        if self._use_memory:
+            self._memory[key].append(item)
 
     def read_memory(self, key, last=False):
         """Return memory associated to key.
@@ -100,6 +105,11 @@ class NContainer(NObject):
     @property
     def nE(self):
         return len(self._elements)
+
+    def use_memory(self, use=True):
+        super().use_memory(use=use)
+        for elem in self.iter():
+            elem.use_memory(use=use)
 
     def update(self, *args, **kargs):
         for elem in iter(self):

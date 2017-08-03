@@ -45,3 +45,7 @@ def test_NNetwork():
     v1y = act_fun(np.dot(x0, w_vec) + bias)
     x1 = np.array([v1y, v1y])
     assert network.forward(x0)[0] == act_fun(np.dot(x1, w_vec) + bias)
+    assert network.read_memory('input') == [x0]
+    network.use_memory(False)
+    network.forward(x0)
+    assert network.read_memory('input') == [x0]
