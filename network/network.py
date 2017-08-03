@@ -97,11 +97,15 @@ class NNetwork(NContainer):
             decay_fun (call): function to update learning_rate
 
             batch_size (int, optional)
-            iterations (int, optional): number of data set browsing
+            iterations (int, optional): number of time data set browsing
             shuffle (boolean, optional): shuffle data_set when browsing it
 
             verbose_lvl (int, optional): the higher, the more it display
-            verbose_step ()
+                0 for None
+                1 for start and end display
+                2 for iteration display
+                3 for batch display
+            verbose_step (int, optional): authorize display every x steps
         """
         if decay_fun is None:
             def decay_fun(x):
@@ -151,18 +155,18 @@ class NNetwork(NContainer):
 
             if iteration is 1 and verbose_lvl:
                 print(
-                    "# First iteration: mean cost: {}"
-                    .format(np.mean(batch_costs))
+                    "# Iteration {} | Mean cost : {} (l={})"
+                    .format(1, np.mean(batch_costs), learning_rate)
                 )
             if verbose_lvl >= 2 and (iteration % verbose_step == 0):
                 print(
-                    "> Iteration {} | Mean cost : {}"
-                    .format(iteration, np.mean(batch_costs))
+                    "> Iteration {} | Mean cost : {} (l={})"
+                    .format(iteration, np.mean(batch_costs), learning_rate)
                 )
         if verbose_lvl:
             print(
-                "# Last iteration ({}) | Mean Cost : {}"
-                .format(iteration, np.mean(batch_costs))
+                "# Iteration {} | Mean cost : {} (l={})"
+                .format(iteration, np.mean(batch_costs), learning_rate)
             )
 
     def predict(self, input_set):
