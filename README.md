@@ -24,6 +24,9 @@ The question of **performance is out of concern**, if you are looking for perfor
 | **nW_l** | number of weights per neuron on layer l (must be equal) |
 | **nW_l_j** | number of weights of neuron j on layer l |
 
+np.array[n] is a numpy array of n elements
+2d-np.array[n, m] is a 2d numpy array of n * m elements 
+
 
 # Sources
 

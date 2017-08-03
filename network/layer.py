@@ -29,13 +29,13 @@ class NLayer(NContainer):
         """Return back-propagated delta?
 
         Args:
-            nl_weights (2d-np.array, size=nN_nl*nW_nl):
+            nl_weights (2d-np.array[nN_nl*nW_nl]):
                 next layer weights
-            nl_delta (np.array, size=nN_nl):
+            nl_delta (np.array[nN_nl]):
                 next layer deltas
 
         Return:
-            (np.array, size=nN_l)
+            (np.array[nN_l])
         """
         delta = self.delta(nl_delta, nl_weights)
         self.memorize('delta', delta)
@@ -104,15 +104,15 @@ class HNLayer(NLayer):
                 nW_nl = nN_l
 
         Args:
-            nl_weights (2d-np.array, size=nN_nl*nW_nl):
+            nl_weights (2d-np.array[nN_nl*nW_nl]):
                 next layer weights
-            nl_delta (np.array, size=nN_nl):
+            nl_delta (np.array[nN_nl]):
                 next layer deltas
-            weighted_sum_vect (np.array, size=nW_l, optional)
+            weighted_sum_vect (np.array[nW_l], optional)
                 weighted sums (per neuron), default is last calculated
 
         Returns:
-            (np.array, size=nN_l)
+            (np.array[nN_l])
         """
         # SHORTCUT : neuron delta
         if weighted_sum_vect is None:
@@ -126,7 +126,7 @@ class HNLayer(NLayer):
         """Bias rate of change.
 
         Returns:
-            (np.array, size=nN_l)
+            (np.array[nN_l])
         """
         return delta
 
@@ -134,7 +134,7 @@ class HNLayer(NLayer):
         """Bias rate of weights.
 
         Returns:
-            (2d-np_array, size=nN_l*nW_l)
+            (2d-np_array[nN_l*nW_l])
         """
         return np.array([
             neuron.rate_of_change_weights(vector, delta_w)

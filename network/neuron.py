@@ -66,27 +66,16 @@ class Neuron(NObject):
         # Capture last batch
         inputs = self.read_memory('input')
         deltas = self.read_memory('delta')
-        weights_rates = [
-            self.rate_of_change_weights(vector, delta)
-            for vector, delta in zip(inputs, deltas)
-        ]
-        bias_rates = [
-            self.rate_of_change_bias(delta)
-            for delta in deltas
-        ]
+        weights_bgrad, bias_bgrad = self.batch_gradients(inputs, deltas)
 
-        # Compute a rate given former rates (mean)
-        weights_rate = sum(weights_rates) / len(weights_rates)
-        bias_rate = sum(bias_rates) / len(bias_rates)
-
-        # Compute learning rates
+        # Compute learning speeds
         self._learning_speed = (
             momentum * self._learning_speed
-            - learning_rate * weights_rate
+            - learning_rate * weights_bgrad
         )
         self._learning_speed_b = (
             momentum * self._learning_speed
-            - learning_rate * bias_rate
+            - learning_rate * bias_bgrad
         )
 
         # Update
@@ -95,6 +84,31 @@ class Neuron(NObject):
         self.reset_memory()
 
     # Calculation
+
+    def batch_gradients(self, inputs, deltas):
+        """
+
+        Args:
+            inputs (list of np.array[dim_in]): inputs of batch
+            deltas (list of float): deltas associated to deltas
+
+        Returns:
+            weights_bgrad (np.array[nW]): batch gradient of each weights
+            bias_bgrad (float): batch gradient of bias
+        """
+        weights_gradients = [
+            self.gradient_weights(vector, delta)
+            for vector, delta in zip(inputs, deltas)
+        ]
+        bias_gradients = [
+            self.gradient_bias(delta)
+            for delta in deltas
+        ]
+
+        # Compute a batch-gradients given all gradients (mean)
+        weights_bgrad = sum(weights_gradients) / len(weights_gradients)
+        bias_bgrad = sum(bias_gradients) / len(bias_gradients)
+        return weights_bgrad, bias_bgrad
 
     def compute(self, vector):
         """Return """
@@ -106,9 +120,9 @@ class Neuron(NObject):
         """Error due to neuron.
 
         Args:
-            nl_i_weights (np.array, size=nN_nl):
+            nl_i_weights (np.array[nW]):
                 weights of next layer regarding this neuron output
-            nl_delta (np.array, size=nN_nl):
+            nl_delta (np.array[nW]):
                 deltas of next layer
             weighted_sum (float, optional):
                 weighted_sum that was calculated
@@ -123,12 +137,12 @@ class Neuron(NObject):
             np.dot(nl_i_weights, nl_delta) * self._act_der(weighted_sum)
         )
 
-    def rate_of_change_bias(self, delta):
-        """Rate of change with respect of bias."""
+    def gradient_bias(self, delta):
+        """Gradient with respect of bias (float)."""
         return delta
 
-    def rate_of_change_weights(self, vector, delta):
-        """Rate of change with respect of weights."""
+    def gradient_weights(self, vector, delta):
+        """Gradient with respect of weights (np.array[nW])."""
         return vector * delta
 
     def weighted_sum(self, vector):
