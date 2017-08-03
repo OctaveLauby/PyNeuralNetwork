@@ -75,7 +75,7 @@ class Neuron(NObject):
             - learning_rate * weights_bgrad
         )
         self._learning_speed_b = (
-            momentum * self._learning_speed
+            momentum * self._learning_speed_b
             - learning_rate * bias_bgrad
         )
 
