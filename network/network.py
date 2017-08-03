@@ -82,27 +82,50 @@ class NNetwork(NContainer):
             for output, expected_output in zip(outputs, output_set)
         ]
 
-    def fit(self, input_set, output_set, learning_rate, momentum=0,
-            batch_size=1, shuffle=True, iterations=1, verbose=True):
+    def fit(self, input_set, output_set,
+            learning_rate=0.01, momentum=0, decay_fun=None,  # update params
+            batch_size=1, iterations=1, shuffle=True,  # loop params
+            verbose_lvl=1, verbose_step=1,
+            ):
         """
         Args:
             input_set (list of np.array[dim_in])
             output_set (list of np.array[dim_out])
+
             learning_rate (float)
             momentum (float, optional): usually around 0.9
+            decay_fun (call): function to update learning_rate
+
             batch_size (int, optional)
-            shuffle (boolean, optional): shuffle data_set when browsing it
             iterations (int, optional): number of data set browsing
+            shuffle (boolean, optional): shuffle data_set when browsing it
+
+            verbose_lvl (int, optional): the higher, the more it display
+            verbose_step ()
         """
+        if decay_fun is None:
+            def decay_fun(x):
+                return x
         self.reset_memory()
         assert len(input_set) == len(output_set)
         ds_size = len(input_set)  # size of dataset
         assert ds_size > 0
 
-        for iteration in range(iterations):
+        if verbose_lvl:
+            print("# ---- Fitting on a data set of %s inputs:" % ds_size)
+            print("\t learning_rate     %s" % learning_rate)
+            print("\t momentum          %s" % momentum)
+            print("\t decay_fun         %s" % decay_fun)
+            print("\t batch_size        %s" % batch_size)
+            print("\t iterations        %s" % iterations)
+            print("\t shuffle           %s" % shuffle)
+            print()
+
+        for iteration in range(1, iterations+1):
             indexes = list(range(ds_size))
             if shuffle:
                 random.shuffle(indexes)
+            batch_costs = []
             while indexes:
                 # create batch
                 batch_indexes = []
@@ -116,12 +139,31 @@ class NNetwork(NContainer):
                     costs.append(self.cost(output_set[index]))
                     self.backward(output_set[index])
                 self.update(learning_rate=learning_rate, momentum=momentum)
+                learning_rate = decay_fun(learning_rate)
 
-                if verbose:
+                batch_cost = np.mean(costs)
+                batch_costs.append(batch_cost)
+                if verbose_lvl >= 3 and (iteration % verbose_step == 0):
                     print(
-                        "Batch size : {} | Mean cost : {}"
-                        .format(len(batch_indexes, np.mean(costs)))
+                        "\t> Batch size : {} | Mean cost : {}"
+                        .format(len(batch_indexes), batch_cost)
                     )
+
+            if iteration is 1 and verbose_lvl:
+                print(
+                    "# First iteration: mean cost: {}"
+                    .format(np.mean(batch_costs))
+                )
+            if verbose_lvl >= 2 and (iteration % verbose_step == 0):
+                print(
+                    "> Iteration {} | Mean cost : {}"
+                    .format(iteration, np.mean(batch_costs))
+                )
+        if verbose_lvl:
+            print(
+                "# Last iteration ({}) | Mean Cost : {}"
+                .format(iteration, np.mean(batch_costs))
+            )
 
     def predict(self, input_set):
         res = [
