@@ -1,74 +1,28 @@
-import numpy as np
-import random
-from csv import DictReader
-from pprint import pprint
-
-from pcollections.functions import (
-    euclidean_dist, euclidean_dist_jac,
-    sigmoid, sigmoid_der,
-)
-from network import NNetwork, HNLayer
-
-
 # --------------------------------------------------------------------------- #
 # DataSet reading
 
-path = "iris.csv"
+from utils.dataset import DataSet
+
+csv_path = "iris.csv"
 vector_cols = ["sepal_length", "sepal_width", "petal_length", "petal_width"]
 label_col = "class"
 
-input_set = []
-input_labels = []
+ds = DataSet(csv_path, vector_cols, label_col)
+input_set = ds.input_set
+input_labels = ds.input_labels
+output_set = ds.output_set
 
-with open(path) as csvfile:
-    reader = DictReader(csvfile)
-    for row in reader:
-        input_set.append(np.array([
-            float(row[col])
-            for col in vector_cols
-        ]))
-        input_labels.append(row[label_col])
-
-
-def label2vector(label):
-    if label == "Iris-setosa":
-        return np.array([1, 0, 0])
-    elif label == "Iris-versicolor":
-        return np.array([0, 1, 0])
-    elif label == "Iris-virginica":
-        return np.array([0, 0, 1])
-    else:
-        raise Exception("Unknown Label '%s'" % label)
-
-
-def vector2label(vector):
-    if max(vector) == vector[0]:
-        return "Iris-setosa"
-    elif max(vector) == vector[1]:
-        return "Iris-versicolor"
-    elif max(vector) == vector[2]:
-        return "Iris-virginica"
-
-
-def prediction2labels(prediction):
-    return [
-        vector2label(vector)
-        for vector in prediction
-    ]
-
-
-def rights_ratio(labels, prediction):
-    return float(sum([
-        label == pred
-        for label, pred in zip(labels, prediction2labels(prediction))
-    ]) / len(prediction))
-
-
-output_set = [label2vector(label) for label in input_labels]
+ds.display()
 
 
 # --------------------------------------------------------------------------- #
 # Initialization
+import random
+from network import NNetwork, HNLayer
+from pcollections.functions import (
+    euclidean_dist, euclidean_dist_jac,
+    sigmoid, sigmoid_der,
+)
 
 # Network
 cost_fun = euclidean_dist
@@ -94,12 +48,19 @@ print()
 
 # --------------------------------------------------------------------------- #
 # Learning
-learning_kwargs = {
-    'learning_rate': 0.001,
-    'momentum': 0.9,
+from pcollections.function_creators import (
+    exponential_decay,
+    step_decay,
+    inverse_decay,
+)
 
-    'batch_size': 5,
-    'iterations': 1000,
+learning_kwargs = {
+    'learning_rate': 0.1,
+    'momentum': 0.9,
+    # 'decay_fun': exponential_decay(1),
+
+    'batch_size': 1,
+    'iterations': 300,
 
     'verbose_lvl': 2,
     'verbose_step': 50,
@@ -109,8 +70,8 @@ learning_kwargs = {
 network.fit(input_set, output_set, **learning_kwargs)
 
 # Test
-prediction = network.predict(input_set)
+predictions = network.predict(input_set)
 print(
     "Rights : %.1f %%"
-    % (100 * rights_ratio(input_labels, prediction))
+    % (100 * ds.rights_ratio(predictions, output_set))
 )
