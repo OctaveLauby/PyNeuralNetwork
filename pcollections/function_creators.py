@@ -18,6 +18,7 @@ class StepDecay(Function):
     def __call__(self, x):
         self.count += 1
         if self.count >= self.step:
+            self.count = 0
             return super().__call__(x)
         else:
             return x
