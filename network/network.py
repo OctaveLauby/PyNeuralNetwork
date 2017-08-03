@@ -30,6 +30,10 @@ class NNetwork(NContainer):
         assert self.dim_out == expected_dim
         return True
 
+    def cost(self, expected_output):
+        output = self.read_memory('output', last=True)
+        return self._cost_fun(output, expected_output)
+
     def backward(self, expected_output):
         """STEP-2: Back-propagate error on last output."""
         output = self.read_memory('output', last=True)
