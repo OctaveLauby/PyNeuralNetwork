@@ -59,6 +59,7 @@ class Neuron(NObject):
         return delta
 
     def forward(self, vector):
+        self.memorize('input', vector)
         return self.compute(vector)
 
     def update(self, learning_rate, momentum):
@@ -96,6 +97,7 @@ class Neuron(NObject):
             weights_bgrad (np.array[nW]): batch gradient of each weights
             bias_bgrad (float): batch gradient of bias
         """
+        assert len(inputs) == len(deltas)
         weights_gradients = [
             self.gradient_weights(vector, delta)
             for vector, delta in zip(inputs, deltas)
