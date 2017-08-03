@@ -57,6 +57,10 @@ from pcollections.function_creators import (
 learning_kwargs = {
     'learning_rate': 0.001,
     'momentum': 0.9,
+
+    # 'learning_rate': 0.1,
+    # 'momentum': 0.9,
+    # 'decay_fun': step_decay(25, 0.5),
     # 'decay_fun': exponential_decay(1),
 
     'batch_size': 1,

@@ -144,7 +144,6 @@ class NNetwork(NContainer):
                     costs.append(self.cost(output_set[index]))
                     self.backward(output_set[index])
                 self.update(learning_rate=learning_rate, momentum=momentum)
-                learning_rate = decay(learning_rate)
 
                 batch_cost = np.mean(costs)
                 batch_costs.append(batch_cost)
@@ -164,6 +163,9 @@ class NNetwork(NContainer):
                     "> Iteration {} | Mean cost : {} (l={})"
                     .format(iteration, np.mean(batch_costs), learning_rate)
                 )
+
+            # End of iteration
+            learning_rate = decay(learning_rate)
         if verbose_lvl:
             print(
                 "# Iteration {} | Mean cost : {} (l={})"
