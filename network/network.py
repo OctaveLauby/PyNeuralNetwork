@@ -60,7 +60,7 @@ class NNetwork(NContainer):
             momentum (float): usually around 0.9
         """
         for layer in self.iter():
-            layer.update()
+            layer.update(learning_rate, momentum)
         self.reset_memory()
 
     @property
