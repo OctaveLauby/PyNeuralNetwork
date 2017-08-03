@@ -9,7 +9,7 @@ from pcollections.function_creators import (
 
 def test_exponential_decay():
     fun = exponential_decay(2)
-    assert fun(1) == np.exp(-2)
+    assert fun(0.1) == 0.1 * np.exp(-2)
     assert fun(0) == 0
 
 

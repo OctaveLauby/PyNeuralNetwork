@@ -107,8 +107,9 @@ class NNetwork(NContainer):
                 3 for batch display
             verbose_step (int, optional): authorize display every x steps
         """
+        decay = decay_fun
         if decay_fun is None:
-            def decay_fun(x):
+            def decay(x):
                 return x
         self.reset_memory()
         assert len(input_set) == len(output_set)
@@ -143,7 +144,7 @@ class NNetwork(NContainer):
                     costs.append(self.cost(output_set[index]))
                     self.backward(output_set[index])
                 self.update(learning_rate=learning_rate, momentum=momentum)
-                learning_rate = decay_fun(learning_rate)
+                learning_rate = decay(learning_rate)
 
                 batch_cost = np.mean(costs)
                 batch_costs.append(batch_cost)

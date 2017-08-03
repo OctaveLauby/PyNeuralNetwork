@@ -12,7 +12,7 @@ input_set = ds.input_set
 input_labels = ds.input_labels
 output_set = ds.output_set
 
-ds.display()
+# ds.display()
 
 
 # --------------------------------------------------------------------------- #
@@ -55,7 +55,7 @@ from pcollections.function_creators import (
 )
 
 learning_kwargs = {
-    'learning_rate': 0.1,
+    'learning_rate': 0.001,
     'momentum': 0.9,
     # 'decay_fun': exponential_decay(1),
 
@@ -75,3 +75,7 @@ print(
     "Rights : %.1f %%"
     % (100 * ds.rights_ratio(predictions, output_set))
 )
+print()
+
+print("**** Trained Network :")
+network.pprint()
