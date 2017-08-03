@@ -94,7 +94,7 @@ class NNetwork(NContainer):
             shuffle (boolean, optional): shuffle data_set when browsing it
             iterations (int, optional): number of data set browsing
         """
-        self.use_memory(True)
+        self.reset_memory()
         assert len(input_set) == len(output_set)
         ds_size = len(input_set)  # size of dataset
         assert ds_size > 0
@@ -124,11 +124,12 @@ class NNetwork(NContainer):
                     )
 
     def predict(self, input_set):
-        self.use_memory(False)
-        return [
+        res = [
             self.forward(vector)
             for vector in input_set
         ]
+        self.reset_memory()
+        return res
 
     @property
     def nL(self):

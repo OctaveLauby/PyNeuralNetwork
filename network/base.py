@@ -7,7 +7,6 @@ class NObject(object):
         self._dim_in = dim_in
         self._dim_out = dim_out
         self._memory = None
-        self._use_memory = True
 
         self.reset_memory()
 
@@ -19,13 +18,9 @@ class NObject(object):
     def dim_out(self):
         return self._dim_out
 
-    def use_memory(self, use=True):
-        self._use_memory = use
-
     def memorize(self, key, item):
         """Store item in memory at key."""
-        if self._use_memory:
-            self._memory[key].append(item)
+        self._memory[key].append(item)
 
     def read_memory(self, key, last=False):
         """Return memory associated to key.
@@ -85,10 +80,10 @@ class NObject(object):
 class NContainer(NObject):
 
     def __init__(self, dim_in, dim_out, elem_cls):
-        super().__init__(dim_in, dim_out)
         self._NE = 0
         self._elements = []
         self._elem_cls = elem_cls
+        super().__init__(dim_in, dim_out)
 
     def add(self, elem):
         """Add elem to elements."""
@@ -106,14 +101,17 @@ class NContainer(NObject):
     def nE(self):
         return len(self._elements)
 
-    def use_memory(self, use=True):
-        super().use_memory(use=use)
+    def reset_memory(self):
+        """Empty memory."""
+        super().reset_memory()
         for elem in self.iter():
-            elem.use_memory(use=use)
+            elem.reset_memory()
 
     def update(self, *args, **kargs):
         for elem in iter(self):
             elem.update()
+
+    # Iterator
 
     def __iter__(self):
         return iter(self._elements)

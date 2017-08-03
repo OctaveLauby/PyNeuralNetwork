@@ -45,7 +45,12 @@ def test_NNetwork():
     v1y = act_fun(np.dot(x0, w_vec) + bias)
     x1 = np.array([v1y, v1y])
     assert network.forward(x0)[0] == act_fun(np.dot(x1, w_vec) + bias)
-    assert network.read_memory('input') == [x0]
-    network.use_memory(False)
-    network.forward(x0)
-    assert network.read_memory('input') == [x0]
+    assert len(network.read_memory('input')) == 1
+    assert (network.read_memory('input')[0] == x0).all()
+    assert len(layer_1.read_memory('input')) == 1
+    assert (layer_1.read_memory('input')[0] == x0).all()
+    assert len(layer_2.read_memory('input')) == 1
+    assert (layer_2.read_memory('input')[0] == x1).all()
+    network.reset_memory()
+    assert network.read_memory('input') == []
+    assert layer_2.read_memory('input') == []
