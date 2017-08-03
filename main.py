@@ -39,7 +39,7 @@ vector = np.array([1, 1, 1])
 expected_output = np.array([0, 1])
 learning_rate = 0.1
 momentum = 0.9
-
+repeat = 1000
 
 # Forwarding
 print("\n**** Forwarding :", vector)
@@ -52,4 +52,12 @@ network.backward(expected_output)
 network.update(learning_rate=learning_rate, momentum=momentum)
 
 print("\n**** Updated network :")
+network.pprint()
+
+print("\n**** Repeat it %s times :" % repeat)
+for i in range(repeat):
+    res = network.forward(vector)
+    network.backward(expected_output)
+    print(res, network.cost(expected_output))
+    network.update(learning_rate=learning_rate, momentum=momentum)
 network.pprint()

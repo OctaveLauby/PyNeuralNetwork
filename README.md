@@ -5,7 +5,7 @@ Neural Network with Backpropagation
 
 Here is an implementation of a neural network with backpropagation.
 
-The purpose is to implement a **simple and readable** model of what a neural network is, and how it works.
+The purpose is to implement a **simple and readable** model of what a neural network is, and how it works. The performance is low as it does not us a fully matrix-based approach.
 
 The question of **performance is out of concern**, if you are looking for performance please use appropriate tools.
 
