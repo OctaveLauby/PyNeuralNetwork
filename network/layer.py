@@ -25,7 +25,27 @@ class NLayer(NContainer):
             assert neuron.check()
         assert self.nN == self.dim_out
 
+    def backward(self, nl_delta, nl_weights):
+        """Return back-propagated delta?
+
+        Args:
+            nl_weights (2d-np.array, size=nN_nl*nW_nl):
+                next layer weights
+            nl_delta (np.array, size=nN_nl):
+                next layer deltas
+
+        Return:
+            (np.array, size=nN_l)
+        """
+        delta = self.delta(nl_delta, nl_weights)
+        self.memorize('delta', delta)
+        for neuron, delta_n in zip(self.iter(), delta):
+            # SHORTCUT : neuron backward, so we memorize from here
+            neuron.memorize('delta', delta_n)
+        return delta
+
     def forward(self, vector):
+        """Forward input vector to each neuron to calculate layer output."""
         res = []
         wsum_all = []
         for neuron in iter(self):
@@ -33,8 +53,14 @@ class NLayer(NContainer):
             wsum_all.append(
                 neuron.read_memory('wsum', last=True)
             )
-        self._memory['wsum'].append(np.array(wsum_all))
+        self.memorize('input', vector)
+        self.memorize('wsum', np.array(wsum_all))
         return np.array(res)
+
+    def update(self, learning_rate, momentum):
+        for neuron in self.iter():
+            neuron.update(learning_rate, momentum)
+        self.reset_memory()
 
     def delta(self, *args, **kwargs):
         raise NotImplementedError
@@ -69,7 +95,7 @@ class HNLayer(NLayer):
 
     # Calculation
 
-    def delta(self, nl_weights, nl_delta, weighted_sum_vect):
+    def delta(self, nl_weights, nl_delta, weighted_sum_vect=None):
         """Error due to layer.
 
         Reminder:
@@ -82,11 +108,15 @@ class HNLayer(NLayer):
                 next layer weights
             nl_delta (np.array, size=nN_nl):
                 next layer deltas
-            weighted_sum_vect (np.array, size=nW_l)
+            weighted_sum_vect (np.array, size=nW_l, optional)
+                weighted sums (per neuron), default is last calculated
 
         Returns:
             (np.array, size=nN_l)
         """
+        # SHORTCUT : neuron delta
+        if weighted_sum_vect is None:
+            weighted_sum_vect = self.read_memory('wsum', last=True)
         return (
             np.dot(nl_weights.T, nl_delta)
             * self._act_der(weighted_sum_vect)
@@ -107,6 +137,6 @@ class HNLayer(NLayer):
             (2d-np_array, size=nN_l*nW_l)
         """
         return np.array([
-            neuron.rate_of_chage_weights(vector, delta_w)
+            neuron.rate_of_change_weights(vector, delta_w)
             for neuron, delta_w in zip(iter(self), delta)
         ])

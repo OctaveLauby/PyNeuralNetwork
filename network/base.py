@@ -18,6 +18,10 @@ class NObject(object):
     def dim_out(self):
         return self._dim_out
 
+    def memorize(self, key, item):
+        """Store item in memory at key."""
+        self._memory[key].append(item)
+
     def read_memory(self, key, last=False):
         """Return memory associated to key.
 
@@ -103,6 +107,12 @@ class NContainer(NObject):
 
     def __iter__(self):
         return iter(self._elements)
+
+    def iter(self):
+        return iter(self)
+
+    def riter(self):
+        return iter(reversed(self._elements))
 
     # Pretty display
     def __repr__(self):
