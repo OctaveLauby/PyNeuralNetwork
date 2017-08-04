@@ -4,11 +4,25 @@ from csv import DictReader
 
 class DataSet(object):
 
-    def __init__(self, csv_path, vector_cols, label_col):
-        self.csv_path = csv_path
-        self.vector_cols = vector_cols
-        self.label_col = label_col
+    def __init__(self, csv_path, label_col, vector_cols=None):
+        """Create dataset.
 
+        Args:
+            csv_path (str):     path to csv
+            label_col (str):    column name where to read label
+            vector_cols (str):  names of columns to build vectors
+                > default is all columns except label col
+        """
+        self.csv_path = csv_path
+        self.label_col = label_col
+        if vector_cols:
+            self.vector_cols = vector_cols
+        else:
+            with open(csv_path) as csvfile:
+                reader = DictReader(csvfile)
+                self.vector_cols = [
+                    field for field in reader.fieldnames if field != label_col
+                ]
         self.input_set = []
         self.input_labels = []
         self._load()
@@ -28,9 +42,18 @@ class DataSet(object):
     def dim_out(self):
         return len(self.labels)
 
-    def display(self):
+    def display_data(self):
         for vector, output in zip(self.input_set, self.output_set):
             print(vector, "|", output)
+
+    def display_struct(self):
+        print("DataSet :", self.csv_path)
+        print("\tInput vect :", self.vector_cols)
+        print("\tLabels     :", ", ".join([
+            "%s (%s)" % (label, self.input_labels.count(label))
+            for label in self.labels
+        ]))
+        print("\tSize       :", len(self.input_set))
 
     def _load(self):
         """Load datas in file"""

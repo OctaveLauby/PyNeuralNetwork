@@ -9,3 +9,4 @@ def test_Function():
     assert my_fun(-2) == 0
     assert my_fun(0) == -4
     assert (f1 * (1/2))(2) == 2
+    assert ((1/2) * f1)(4) == 3

@@ -11,6 +11,7 @@ def test_euclidean_dist():
     v1 = np.array([4, 5])
     v2 = np.array([1, 1])
     assert euclidean_dist(v1, v2) == 5
+    assert (0.5 * euclidean_dist)(v1, v2) == 2.5
 
 
 def test_sigmoid():
