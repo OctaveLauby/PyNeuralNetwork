@@ -33,4 +33,4 @@ np.array[n] is a numpy array of n elements
 - (general) https://ayearofai.com/rohan-lenny-1-neural-networks-the-backpropagation-algorithm-explained-abf4609d4f9d
 - (maths) http://neuralnetworksanddeeplearning.com/chap2.html
 - (hyperparameters) http://cs231n.github.io/neural-networks-3/
-- (dataset) https://archive.ics.uci.edu/ml/datasets/Iris
+- (dataset) https://archive.ics.uci.edu/ml/datasets.html
