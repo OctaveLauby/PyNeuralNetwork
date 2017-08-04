@@ -119,6 +119,14 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "-b", "--batch_size", type=int,
+        required=False, default=1,
+        help=(
+            "size of batch,"
+            " default is 1"
+        ),
+    )
+    parser.add_argument(
         "-r", "--learning_rate", type=float,
         required=False, default=0.001,
         help=(
@@ -150,30 +158,47 @@ if __name__ == "__main__":
             " default is 0.1"
         ),
     )
+
+    # ---- Verbose
+    parser.add_argument(
+        "-vl", "--verbose_lvl", type=int,
+        required=False, default=2,
+        help=(
+            "level of verbose,"
+            " default is 2"
+        ),
+    )
+    parser.add_argument(
+        "-vs", "--verbose_step", type=int,
+        required=False, default=50,
+        help=(
+            "number of iteration between each display,"
+            " default is 50"
+        ),
+    )
+
     args = parser.parse_args()
     csv_path = args.file_path  # "data/iris.csv"
     label_col = args.label_fieldname  # "class"
     iterations = args.iterations
     hidden_layers = args.hidden_layers
-    learning_rate = args.learning_rate
-    momentum = args.momentum
 
     k = 0.01
     functions = {
         'id': identity,
         'exp': exponential_decay(k),
         'step': step_decay(50, k),
-        'inv': inverse_decay(learning_rate, k),
+        'inv': inverse_decay(args.learning_rate, k),
     }
 
     learning_kwargs = {
-        'learning_rate': learning_rate,
-        'momentum': momentum,
+        'learning_rate': args.learning_rate,
+        'momentum': args.momentum,
 
-        'batch_size': 1,
-        'iterations': iterations,
+        'batch_size': args.batch_size,
+        'iterations': args.iterations,
 
-        'verbose_lvl': 2,
-        'verbose_step': 50,
+        'verbose_lvl': args.verbose_lvl,
+        'verbose_step': args.verbose_step,
     }
     main(csv_path, label_col, hidden_layers, learning_kwargs)
