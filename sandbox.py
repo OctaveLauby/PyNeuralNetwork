@@ -1,63 +1,48 @@
-import numpy as np
-import random
+from sklearn.metrics import classification_report,confusion_matrix
+from sklearn.neural_network import MLPClassifier
 
-from pcollections.functions import (
-    euclidean_dist, euclidean_dist_jac,
-    sigmoid, sigmoid_der,
+from utils.dataset import DataSet
+
+
+ds = DataSet("data/iris.csv", label_col="class")
+training_set, gene_set = ds.split(0.8)
+
+print("**** Data :")
+ds.display_struct()
+print()
+
+print("**** Training Set :")
+training_set.display_struct()
+print()
+
+print("**** Generalisation Set :")
+gene_set.display_struct()
+print()
+
+
+network = MLPClassifier(
+    solver='lbfgs',
+    alpha=1e-5,
+    hidden_layer_sizes=(2, 4),
+    random_state=1,
 )
-from network import NNetwork, HNLayer
-
-# --------------------------------------------------------------------------- #
-# Initialization
-
-# Network
-cost_fun = euclidean_dist
-cost_jac = euclidean_dist_jac
-network = NNetwork(dim_in=3, dim_out=2, cost_fun=cost_fun, cost_jac=cost_jac)
-
-# Neurons
-n_kwargs = {
-    'act_fun': sigmoid,
-    'act_der': sigmoid_der,
-    'init_fun': lambda i: random.random(),
-}
-
-# Layers
-layer_1 = HNLayer(dim_in=3, nN=3, **n_kwargs)
-layer_2 = HNLayer(dim_in=3, nN=2, **n_kwargs)
-network.add(layer_1)
-network.add(layer_2)
-
-network.check()
-print("**** Original Network :")
-network.pprint()
 
 
-# --------------------------------------------------------------------------- #
-# Learning
-vector = np.array([1, 1, 1])
-expected_output = np.array([0, 1])
-learning_rate = 0.1
-momentum = 0.9
-repeat = 1000
+network.fit(training_set.input_set, training_set.output_set)
 
-# Forwarding
-print("\n**** Forwarding :", vector)
-print("> output :", network.forward(vector))
 
-# Back Propagation
-print("\n**** Back propagation with %s." % expected_output)
-print("> cost :", network.cost(expected_output))
-network.backward(expected_output)
-network.update(learning_rate=learning_rate, momentum=momentum)
+predictions = network.predict(training_set.input_set)
+print(
+    "Rights on training set: %.1f %%"
+    % (100 * ds.rights_ratio(predictions, training_set.output_set))
+)
+predictions = network.predict(gene_set.input_set)
+print(
+    "Rights on gene set: %.1f %%"
+    % (100 * ds.rights_ratio(predictions, gene_set.output_set))
+)
+print()
 
-print("\n**** Updated network :")
-network.pprint()
+print(confusion_matrix(gene_set.output_set, predictions))
 
-print("\n**** Repeat it %s times :" % repeat)
-for i in range(repeat):
-    res = network.forward(vector)
-    network.backward(expected_output)
-    print(res, network.cost(expected_output))
-    network.update(learning_rate=learning_rate, momentum=momentum)
-network.pprint()
+print(classification_report(gene_set.output_set, predictions))
