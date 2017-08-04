@@ -44,6 +44,14 @@ class BaseDataSet(object):
         for vector, output in zip(self.input_set, self.output_set):
             print(vector, "|", output)
 
+    def display_struct(self):
+        print("DataSet :")
+        print("\tLabels     :", ", ".join([
+            "%s (%s)" % (label, self.input_labels.count(label))
+            for label in self.labels
+        ]))
+        print("\tSize       :", self.size)
+
     def labelize(self, vector_or_list):
         """Return label of vector or list of vectors."""
         if isinstance(vector_or_list, np.ndarray):

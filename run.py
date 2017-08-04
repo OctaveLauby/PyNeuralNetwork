@@ -23,11 +23,18 @@ def main(csv_path, label_col, hidden_layers, learning_kwargs):
     # ----------------------------------------------------------------------- #
     # DataSet reading
     ds = DataSet(csv_path, label_col=label_col)
-    input_set = ds.input_set
-    output_set = ds.output_set
+    training_set, gene_set = ds.split(0.8)
 
     print("**** Data :")
     ds.display_struct()
+    print()
+
+    print("**** Training Set :")
+    training_set.display_struct()
+    print()
+
+    print("**** Generalisation Set :")
+    gene_set.display_struct()
     print()
 
     # ----------------------------------------------------------------------- #
@@ -48,13 +55,22 @@ def main(csv_path, label_col, hidden_layers, learning_kwargs):
     # Learning
 
     # Training
-    network.fit(input_set, output_set, **learning_kwargs)
+    network.fit(
+        training_set.input_set,
+        training_set.output_set,
+        **learning_kwargs
+    )
 
     # Test
-    predictions = network.predict(input_set)
+    predictions = network.predict(training_set.input_set)
     print(
-        "Rights : %.1f %%"
-        % (100 * ds.rights_ratio(predictions, output_set))
+        "Rights on training set: %.1f %%"
+        % (100 * ds.rights_ratio(predictions, training_set.output_set))
+    )
+    predictions = network.predict(gene_set.input_set)
+    print(
+        "Rights on gene set: %.1f %%"
+        % (100 * ds.rights_ratio(predictions, gene_set.output_set))
     )
     print()
 
