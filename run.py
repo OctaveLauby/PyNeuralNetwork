@@ -1,6 +1,7 @@
 """Run a network training on a dataset.
 
-python run.py -f data\iris.csv -l class -n 0 -r 0.001 -m 0.9
+python run.py -f data\iris.csv -l class -n 0 -i 300 -r 0.001 -m 0.9
+python run.py -f data\iris.csv -l class -n 2 -i 300 -r 0.01 -m 0.9
 """
 
 import argparse
@@ -94,6 +95,14 @@ if __name__ == "__main__":
 
     # ---- Learning args
     parser.add_argument(
+        "-i", "--iterations", type=int,
+        required=False, default=100,
+        help=(
+            "number of iterations,"
+            " default is 100"
+        ),
+    )
+    parser.add_argument(
         "-r", "--learning_rate", type=float,
         required=False, default=0.001,
         help=(
@@ -128,6 +137,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     csv_path = args.file_path  # "data/iris.csv"
     label_col = args.label_fieldname  # "class"
+    iterations = args.iterations
     hidden_layers = args.hidden_layers
     learning_rate = args.learning_rate
     momentum = args.momentum
@@ -145,7 +155,7 @@ if __name__ == "__main__":
         'momentum': momentum,
 
         'batch_size': 1,
-        'iterations': 300,
+        'iterations': iterations,
 
         'verbose_lvl': 2,
         'verbose_step': 50,
