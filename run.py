@@ -17,30 +17,15 @@ output_set = ds.output_set
 
 # --------------------------------------------------------------------------- #
 # Initialization
-import random
-from network import NNetwork, HNLayer
-from pcollections.functions import (
-    euclidean_dist, euclidean_dist_jac,
-    sigmoid, sigmoid_der,
-)
+from network import HNN
 
 # Network
-cost_fun = euclidean_dist
-cost_jac = euclidean_dist_jac
-network = NNetwork(dim_in=4, dim_out=3, cost_fun=cost_fun, cost_jac=cost_jac)
+network = HNN(
+    dim_in=ds.dim_in,
+    dim_out=ds.dim_out,
+    hidden_layers_nN=[3],
+)
 
-# Neurons
-n_kwargs = {
-    'act_fun': sigmoid,
-    'act_der': sigmoid_der,
-    'init_fun': lambda i: random.random(),
-}
-
-# Layers
-network.add(HNLayer(dim_in=4, nN=3, **n_kwargs))
-network.add(HNLayer(dim_in=3, nN=3, **n_kwargs))
-
-network.check()
 print("**** Original Network :")
 network.pprint()
 print()

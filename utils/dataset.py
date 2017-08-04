@@ -20,6 +20,14 @@ class DataSet(object):
             for label in self.input_labels
         ]
 
+    @property
+    def dim_in(self):
+        return len(self.vector_cols)
+
+    @property
+    def dim_out(self):
+        return len(self.labels)
+
     def display(self):
         for vector, output in zip(self.input_set, self.output_set):
             print(vector, "|", output)
