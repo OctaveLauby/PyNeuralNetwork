@@ -150,6 +150,12 @@ class DataSet(BaseDataSet):
                 self.vector_cols = [
                     field for field in reader.fieldnames if field != label_col
                 ]
+        with open(csv_path) as csvfile:
+            reader = DictReader(csvfile)
+            assert self.label_col in reader.fieldnames
+            for vector_col in self.vector_cols:
+                assert vector_col in reader.fieldnames
+
         self.input_set = []
         self.input_labels = []
         self._load()
