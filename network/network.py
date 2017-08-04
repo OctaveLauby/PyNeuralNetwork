@@ -15,9 +15,8 @@ class NNetwork(NContainer):
             dim_in (int): dimension of input space
             dim_out (int): dimension of output space
             cost_fun (callable): function used to calculate cost
-                output (np.array), expected_output (np.array) -> cost (float)
-            cost_jac (callable): derivate of cost_fun (shared by each
-                partial derivates)
+                | output (np.array), expected_output (np.array) -> cost (float)
+            cost_jac (callable): jacobian of cost_fun
         """
         super().__init__(dim_in=dim_in, dim_out=dim_out, elem_cls=NLayer)
         self._cost_fun = cost_fun
@@ -83,29 +82,31 @@ class NNetwork(NContainer):
         ]
 
     def fit(self, input_set, output_set,
-            learning_rate=0.01, momentum=0, decay_fun=None,  # update params
+            learning_rate=0.001, momentum=0, decay_fun=None,  # update params
             batch_size=1, iterations=1, shuffle=True,  # loop params
             verbose_lvl=1, verbose_step=1,
             ):
         """
         Args:
-            input_set (list of np.array[dim_in])
-            output_set (list of np.array[dim_out])
+            input_set (list of np.array[dim_in]):   list of input vectors
+            output_set (list of np.array[dim_out]): associated outputs
 
-            learning_rate (float)
-            momentum (float, optional): usually around 0.9
-            decay_fun (call): function to update learning_rate
+            learning_rate (float):  learning rate
+            momentum (float):       learning momentum, usually around 0.9
+            decay_fun (call):       function to update learning_rate
+                | float -> float
+                > default is identity
 
-            batch_size (int, optional)
-            iterations (int, optional): number of time data set browsing
-            shuffle (boolean, optional): shuffle data_set when browsing it
+            batch_size (int):   size of input batch between each update
+            iterations (int):   browsing iterations on data
+            shuffle (boolean):  shuffle data_set when browsing it
 
-            verbose_lvl (int, optional): the higher, the more it display
+            verbose_lvl (int):  the higher, the more it display
                 0 for None
                 1 for start and end display
                 2 for iteration display
                 3 for batch display
-            verbose_step (int, optional): authorize display every x steps
+            verbose_step (int): authorize display every x steps
         """
         decay = decay_fun
         if decay_fun is None:

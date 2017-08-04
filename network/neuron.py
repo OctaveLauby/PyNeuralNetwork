@@ -90,12 +90,12 @@ class Neuron(NObject):
         """
 
         Args:
-            inputs (list of np.array[dim_in]): inputs of batch
-            deltas (list of float): deltas associated to deltas
+            inputs (list of np.array[dim_in]): inputs
+            deltas (list of float):            associated deltas
 
         Returns:
-            weights_bgrad (np.array[nW]): batch gradient of each weights
-            bias_bgrad (float): batch gradient of bias
+            weights_bgrad (np.array[nW]):   batch-gradient of each weights
+            bias_bgrad (float):             batch-gradient of bias
         """
         assert len(inputs) == len(deltas)
         weights_gradients = [
@@ -122,12 +122,10 @@ class Neuron(NObject):
         """Error due to neuron.
 
         Args:
-            nl_i_weights (np.array[nW]):
-                weights of next layer regarding this neuron output
-            nl_delta (np.array[nW]):
-                deltas of next layer
-            weighted_sum (float, optional):
-                weighted_sum that was calculated
+            nl_i_weights (np.array[nW]): weights of next layer regarding this
+                neuron output
+            nl_delta (np.array[nW]): deltas of next layer
+            weighted_sum (float): weighted_sum that was calculated
 
         Returns:
             (float)

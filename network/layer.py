@@ -29,10 +29,8 @@ class NLayer(NContainer):
         """Return back-propagated delta?
 
         Args:
-            nl_weights (2d-np.array[nN_nl*nW_nl]):
-                next layer weights
-            nl_delta (np.array[nN_nl]):
-                next layer deltas
+            nl_weights (2d-np.array[nN_nl*nW_nl]):  next layer weights
+            nl_delta (np.array[nN_nl]):             next layer deltas
 
         Return:
             (np.array[nN_l])
@@ -104,12 +102,10 @@ class HNLayer(NLayer):
                 nW_nl = nN_l
 
         Args:
-            nl_weights (2d-np.array[nN_nl*nW_nl]):
-                next layer weights
-            nl_delta (np.array[nN_nl]):
-                next layer deltas
-            weighted_sum_vect (np.array[nW_l], optional)
-                weighted sums (per neuron), default is last calculated
+            nl_weights (2d-np.array[nN_nl*nW_nl]):  next layer weights
+            nl_delta (np.array[nN_nl]):             next layer deltas
+            weighted_sum_vect (np.array[nW_l]):     weighted sums (per neuron)
+                > default is last calculated
 
         Returns:
             (np.array[nN_l])

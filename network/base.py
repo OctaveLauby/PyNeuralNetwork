@@ -27,7 +27,7 @@ class NObject(object):
 
         Args;
             key (str)
-            last (boolean, optional): whether you want to access only last item
+            last (boolean): access last item only
         """
         if last:
             return self._memory[key][-1]
