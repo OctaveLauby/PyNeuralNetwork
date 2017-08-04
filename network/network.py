@@ -22,6 +22,13 @@ class NNetwork(NContainer):
         self._cost_fun = cost_fun
         self._cost_jac = cost_jac
 
+    @property
+    def nL(self):
+        return self.nE
+
+    def layers_nN(self):
+        return [layer.nN for layer in self.iter()]
+
     def check(self):
         """Make sure dimension chain is consistent."""
         expected_dim = self.dim_in
@@ -182,7 +189,3 @@ class NNetwork(NContainer):
         ]
         self.reset_memory()
         return res
-
-    @property
-    def nL(self):
-        return self.nE

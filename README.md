@@ -34,3 +34,4 @@ np.array[n] is a numpy array of n elements
 - (maths) http://neuralnetworksanddeeplearning.com/chap2.html
 - (hyperparameters) http://cs231n.github.io/neural-networks-3/
 - (dataset) https://archive.ics.uci.edu/ml/datasets.html
+- (number of layers and nodes) http://dstath.users.uth.gr/papers/IJRS2009_Stathakis.pdf

@@ -40,11 +40,10 @@ def main(csv_path, label_col, hidden_layers, learning_kwargs):
     # ----------------------------------------------------------------------- #
     # Initialization
     # Network
-    hidden_layers_nN = [ds.dim_out for layer_i in range(hidden_layers)]
     network = HNN(
         dim_in=ds.dim_in,
         dim_out=ds.dim_out,
-        hidden_layers_nN=hidden_layers_nN,
+        nHL=hidden_layers,
     )
 
     print("**** Original Network :")

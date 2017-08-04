@@ -14,7 +14,7 @@ class HNN(NNetwork):
     """Fully Connected Homogeneous Neural Network."""
 
     def __init__(self, dim_in, dim_out, cost_fun=None, cost_jac=None,
-                 hidden_layers_nN=[], act_fun=None, act_der=None,
+                 nHL=None, hidden_layers_nN=[], act_fun=None, act_der=None,
                  outact_fun=None, outact_der=None,
                  init_fun=None,
                  ):
@@ -29,8 +29,10 @@ class HNN(NNetwork):
                 > default is euclidean distance
             cost_jac (callable): jacobian of cost_fun
 
+            nHL (int): number of hidden layers
             hidden_layers_nN (list of int): number of neurons per
                 hidden layers
+                /!\\ if nHL is given, nHL prevails
                 > default is no hidden layer
             act_fun (callable): activation fun of hidden layers
                 > default is sigmoid
@@ -68,6 +70,9 @@ class HNN(NNetwork):
             'act_der': act_der,
             'init_fun': init_fun,
         }
+
+        if nHL:
+            hidden_layers_nN = self.smart_hlayers_nN(nHL)
         for layer_nN in hidden_layers_nN:
             self.add(HNLayer(dim_in=last_dim, nN=layer_nN, **n_kwargs))
             last_dim = layer_nN
@@ -86,3 +91,12 @@ class HNN(NNetwork):
         self.add(HNLayer(dim_in=last_dim, nN=dim_out, **n_kwargs))
 
         self.check()
+
+    def smart_hlayers_nN(self, nHL):
+        """Return a smart configuration on neurons per layers."""
+        hidden_layers_nN = []
+        delta_dim = self.dim_out - self.dim_in
+        for layer_i in range(nHL):
+            nN = self.dim_in + round(delta_dim * (layer_i + 1) / (nHL + 1))
+            hidden_layers_nN.append(int(nN))
+        return hidden_layers_nN
