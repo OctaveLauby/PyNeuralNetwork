@@ -127,6 +127,8 @@ class NNetwork(NContainer):
             print("\t shuffle           %s" % shuffle)
             print()
 
+        iteration = 0
+        batch_costs = []
         for iteration in range(1, iterations+1):
             indexes = list(range(ds_size))
             if shuffle:
