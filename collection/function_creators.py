@@ -14,7 +14,7 @@ class InverseDecay(Function):
         super().__init__(None)
         self.alpha = alpha
         self.k = k
-        self.iteration = -1
+        self.iteration = 0
 
     def __call__(self, x):
         self.iteration += 1
