@@ -65,6 +65,7 @@ class HNN(NNetwork):
         }
 
         last_dim = self.dim_in
+        hlayers_nN = self.build_param('hlayers_nN')
         if self.build_param('nHL'):
             hlayers_nN = self.smart_hlayers_nN(self.build_param('nHL'))
         for layer_nN in hlayers_nN:
