@@ -4,6 +4,7 @@ import random
 from pcollections.functions import (
     euclidean_dist, euclidean_dist_jac,
     sigmoid, sigmoid_der,
+    tanh, tanh_der
 )
 
 from .layer import HNLayer
@@ -39,7 +40,7 @@ class HNN(NNetwork):
             act_der (callable): act_fun der of hidden layers
 
             outact_fun (callable): activation fun of output layer
-                > default is sigmoid
+                > default is tanh
             outact_der (callable): act_fun der of output layer
 
             init_fun (callable): initialisation fun of weights
@@ -81,8 +82,8 @@ class HNN(NNetwork):
 
         # Create last layer
         if outact_fun is None:
-            outact_fun = sigmoid
-            outact_der = sigmoid_der
+            outact_fun = tanh
+            outact_der = tanh_der
         elif outact_der is None:
             raise ValueError("outact_der is given when act_fun is not.")
         n_kwargs = {
