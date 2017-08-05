@@ -1,7 +1,6 @@
 """Run a network training on a dataset.
 
-python run.py -f data\iris.csv -l class -n 0 -i 300 -r 0.001 -m 0.9
-python run.py -f data\iris.csv -l class -n 2 -i 300 -r 0.01 -m 0.9
+Examples in README
 """
 
 import argparse

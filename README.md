@@ -7,7 +7,69 @@ Here is an implementation of a neural network with backpropagation.
 
 The purpose is to implement a **simple and readable** model of what a neural network is, and how it works. The performance is low as it does not us a fully matrix-based approach.
 
-The question of **performance is out of concern**, if you are looking for performance please use appropriate tools.
+The question of **performance is out of concern**, if one is looking for performance please use appropriate tools.
+
+
+# Use Case
+
+## What one will use
+
+**Script**: *run.py*
+
+**DataSet**: example are those in *data/*
+- ***csv*** file
+- with ***header***
+- ***','*** delimiter
+- ***number*** columns, except for label columns that can be anything
+
+**About**: Here are some things one does not need to handle:
+- ***Input space dimension*** is determined by the number of columns (- label column)
+- ***Output space dimension*** is determined by the number of labels
+- Input layer and output layer size match input and output dim
+- Data set is ***splitted*** in 2 (80%, 20%) to build a training set and a globalisation set. ***Proportions*** of labels are respected.
+- Training set is ***shuffled*** at each iteration.
+
+
+## How one should use it
+
+1. See all options:
+
+`python3 run.py -h`
+
+2. Run DNN on a data set with default options (1 hidden layer, ...):
+
+`python3 run.py -f data/iris.csv -l class`
+
+
+3. Customize DNN: *-n --hidden_act --output_act*.
+> For instance lets work with 2 hidden layers with arctan activation function, and an output layer with tanh function
+
+`python3 run.py -f data/iris.csv -l class -n 2 --hidden_act arctan --output_act tanh `
+
+4. Customize weights update: *-r -m*
+> For instance lets use a learning rate of 0.01 and a momentum of 0.8
+
+`python3 run.py f data/iris.csv -l class -r 0.01 -m 0.8`
+
+5. Customize learning rate update: *--decay --decay_rate --decay_step*
+> For instance lets update learning rate every 30 iterations, using exp(-ki) decay funcion where k = 0.1
+
+`python3 run.py f data/iris.csv -l class --decay exp --decay_rate 0.1 --decay_step 30`
+
+6. Customize learning loop: *-i -b*
+> For instance lets loop 200 times on training set
+
+`python3 run.py f data/iris.csv -l class --decay exp --decay_rate 0.1 --decay_step 30`
+
+7. Customize verbose: *--verbose_lvl --verbose_step*
+> For instance lets display information per batch every 50 step
+> verbose_lvl = 0 for no display, 1 for start and end, 2 for iteration level, 3 for batch level
+
+`python3 run.py f data/iris.csv -l class --verbose_lvl 3 --verbose_step 50`
+
+8. Combinaison of those
+> My prefered setting is basically the default one
+> But one can combine all the options the way one wants
 
 
 # Nomenclature
