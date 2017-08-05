@@ -8,9 +8,9 @@ import argparse
 
 from network import HNN
 from pcollections.function_creators import (
-    exponential_decay,
-    step_decay,
-    inverse_decay,
+    ExponentialDecay,
+    InverseDecay,
+    StepFun,
 )
 from utils.dataset import DataSet
 
@@ -182,17 +182,17 @@ if __name__ == "__main__":
     iterations = args.iterations
     hidden_layers = args.hidden_layers
 
-    k = 0.01
     functions = {
         'id': identity,
-        'exp': exponential_decay(k),
-        'step': step_decay(50, k),
-        'inv': inverse_decay(args.learning_rate, k),
+        'exp': ExponentialDecay(args.decay_rate),
+        'step': StepFun(lambda x: args.decay_rate * x, 50),
+        'inv': InverseDecay(args.learning_rate, args.decay_rate),
     }
 
     learning_kwargs = {
         'learning_rate': args.learning_rate,
         'momentum': args.momentum,
+        'decay_fun': functions[args.decay],
 
         'batch_size': args.batch_size,
         'iterations': args.iterations,
