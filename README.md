@@ -28,10 +28,25 @@ np.array[n] is a numpy array of n elements
 2d-np.array[n, m] is a 2d numpy array of n * m elements 
 
 
+# Todo
+
+- Weight regulation
+- KeyInterruption while fitting to still see results, set a new lambda or sth
+
+
+# Leads
+
+- First layer bigger than output might work better
+- Sigmoid activation on output can cause issues
+- Biases are  typically initialized to 0
+- Tanh squashing function on the output ? -> stronger gradiant
+
+
 # Sources
 
 - (general) https://ayearofai.com/rohan-lenny-1-neural-networks-the-backpropagation-algorithm-explained-abf4609d4f9d
 - (maths) http://neuralnetworksanddeeplearning.com/chap2.html
 - (hyperparameters) http://cs231n.github.io/neural-networks-3/
+- (hyperparameters) http://colinraffel.com/wiki/neural_network_hyperparameters
 - (dataset) https://archive.ics.uci.edu/ml/datasets.html
 - (number of layers and nodes) http://dstath.users.uth.gr/papers/IJRS2009_Stathakis.pdf
