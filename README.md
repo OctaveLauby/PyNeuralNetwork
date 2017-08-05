@@ -31,7 +31,7 @@ np.array[n] is a numpy array of n elements
 # Todo
 
 - Weight regulation
-- KeyInterruption while fitting to still see results, set a new lambda or sth
+- KeyInterruption -> set a new lambda or sth
 
 
 # Leads

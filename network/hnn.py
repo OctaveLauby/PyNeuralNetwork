@@ -44,7 +44,7 @@ class HNN(NNetwork):
 
             init_fun (callable): initialisation fun of weights
                 | int (neuron_i) -> float
-                > default is random float between -1 and 1
+                > default is weight = random_float(-1, 1) & bias = 0
         """
         # Init network
         if cost_fun is None:
@@ -63,6 +63,8 @@ class HNN(NNetwork):
         if init_fun is None:
             def init_fun(i):
                 """Random float between -1 and 1"""
+                if i == -1:
+                    return 0.
                 return 2 * random.random() - 1
         last_dim = dim_in
         n_kwargs = {
