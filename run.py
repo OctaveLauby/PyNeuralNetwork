@@ -176,6 +176,14 @@ if __name__ == "__main__":
             " default is None"
         ),
     )
+    parser.add_argument(
+        "--decay_step", type=int,
+        required=False, default=1,
+        help=(
+            "decay function rate,"
+            " default is 1"
+        ),
+    )
 
     # ---- Verbose
     parser.add_argument(
@@ -209,8 +217,10 @@ if __name__ == "__main__":
     learning_kwargs = {
         'learning_rate': args.learning_rate,
         'momentum': args.momentum,
+
         'decay_fun': args.decay,
         'decay_rate': args.decay_rate,
+        'decay_step': args.decay_step,
 
         'batch_size': args.batch_size,
         'iterations': args.iterations,

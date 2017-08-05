@@ -169,7 +169,7 @@ class NNetwork(NContainer):
 
         decay = StepFun(
             DECAY_FUN_CREATORS[decay_fun](learning_rate, decay_rate),
-            verbose_step
+            decay_step
         )
         assert len(input_set) == len(output_set)
         assert ds_size > 0
