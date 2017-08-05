@@ -7,7 +7,7 @@ python run.py -f data\iris.csv -l class -n 2 -i 300 -r 0.01 -m 0.9
 import argparse
 
 from network import HNN
-from pcollections.function_creators import (
+from collection.function_creators import (
     ExponentialDecay,
     InverseDecay,
     StepFun,
@@ -83,6 +83,7 @@ def main(csv_path, label_col, hidden_layers, learning_kwargs):
 
 
 if __name__ == "__main__":
+
     parser = argparse.ArgumentParser(
         description="Create a neural network and train it on dataset."
     )

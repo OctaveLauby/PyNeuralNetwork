@@ -1,7 +1,7 @@
 
 import random
 
-from pcollections.functions import (
+from collection.functions import (
     euclidean_dist, euclidean_dist_jac,
     sigmoid, sigmoid_der,
     tanh, tanh_der

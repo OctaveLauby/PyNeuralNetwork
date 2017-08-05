@@ -1,6 +1,6 @@
 import numpy as np
 
-from pcollections.function_creators import (
+from collection.function_creators import (
     ExponentialDecay,
     InverseDecay,
     StepFun,

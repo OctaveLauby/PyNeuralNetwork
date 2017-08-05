@@ -1,6 +1,6 @@
 import numpy as np
 
-from pcollections.functions import (
+from collection.functions import (
     euclidean_dist,
     sigmoid,
     sigmoid_der,

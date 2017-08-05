@@ -2,7 +2,7 @@ import numpy as np
 
 from network.layer import HNLayer
 from network.network import NNetwork
-from pcollections.functions import euclidean_dist, euclidean_dist_jac
+from collection.functions import euclidean_dist, euclidean_dist_jac
 
 
 def test_NNetwork():
