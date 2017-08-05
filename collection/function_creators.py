@@ -4,7 +4,6 @@ from utils.function import Function
 
 
 class ExponentialDecay(Function):
-
     def __init__(self, k):
         super().__init__(lambda x: x*np.exp(-k))
 
@@ -20,6 +19,11 @@ class InverseDecay(Function):
     def __call__(self, x):
         self.iteration += 1
         return self.alpha / (1 + self.k * self.iteration)
+
+
+class Linear(Function):
+    def __init__(self, k):
+        super().__init__(lambda x: x*k)
 
 
 class StepFun(Function):

@@ -2,6 +2,8 @@ import numpy as np
 
 from utils.function import Function
 
+identity = Function(lambda x: x)
+
 euclidean_dist = Function(lambda var, const: np.linalg.norm(var - const))
 euclidean_dist_jac = Function(lambda var, const: 2 * (var - const))
 

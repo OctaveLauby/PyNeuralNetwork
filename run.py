@@ -7,11 +7,7 @@ python run.py -f data\iris.csv -l class -n 2 -i 300 -r 0.01 -m 0.9
 import argparse
 
 from network import HNN
-from collection.function_creators import (
-    ExponentialDecay,
-    InverseDecay,
-    StepFun,
-)
+from collection import AVAILABLE_ACT, AVAILABLE_COST, AVAILABLE_DECAY
 from utils.dataset import DataSet
 
 
@@ -19,7 +15,7 @@ def identity(x):
     return x
 
 
-def main(csv_path, label_col, hidden_layers, learning_kwargs):
+def main(csv_path, label_col, network_kwargs, learning_kwargs):
     # ----------------------------------------------------------------------- #
     # DataSet reading
     ds = DataSet(csv_path, label_col=label_col)
@@ -43,10 +39,11 @@ def main(csv_path, label_col, hidden_layers, learning_kwargs):
     network = HNN(
         dim_in=ds.dim_in,
         dim_out=ds.dim_out,
-        nHL=hidden_layers,
+        build_params=network_kwargs
     )
 
     print("**** Original Network :")
+    network.print_params()
     network.pprint()
     print()
 
@@ -113,6 +110,22 @@ if __name__ == "__main__":
             " default is 1"
         ),
     )
+    parser.add_argument(
+        "--hidden_act", choices=AVAILABLE_ACT,
+        required=False, default='sigmoid',
+        help=(
+            "activation function of hidden layers,"
+            "default is sigmoid."
+        )
+    )
+    parser.add_argument(
+        "--output_act", choices=AVAILABLE_ACT,
+        required=False, default='tanh',
+        help=(
+            "activation function of output layers,"
+            "default is tanh."
+        )
+    )
 
     # ---- Learning args
     parser.add_argument(
@@ -148,7 +161,7 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
-        "-d", "--decay", choices=['id', 'exp', 'step', 'inv'],
+        "--decay", choices=AVAILABLE_DECAY,
         required=False, default='id',
         help=(
             "decay function, set k for decay rate,"
@@ -156,17 +169,17 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
-        "-k", "--decay_rate", type=float,
-        required=False, default=0.1,
+        "--decay_rate", type=float,
+        required=False, default=None,
         help=(
             "decay function rate,"
-            " default is 0.1"
+            " default is None"
         ),
     )
 
     # ---- Verbose
     parser.add_argument(
-        "-vl", "--verbose_lvl", type=int,
+        "--verbose_lvl", type=int,
         required=False, default=2,
         help=(
             "level of verbose,"
@@ -174,7 +187,7 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
-        "-vs", "--verbose_step", type=int,
+        "--verbose_step", type=int,
         required=False, default=50,
         help=(
             "number of iteration between each display,"
@@ -185,20 +198,19 @@ if __name__ == "__main__":
     args = parser.parse_args()
     csv_path = args.file_path  # "data/iris.csv"
     label_col = args.label_fieldname  # "class"
-    iterations = args.iterations
-    hidden_layers = args.hidden_layers
 
-    functions = {
-        'id': identity,
-        'exp': ExponentialDecay(args.decay_rate),
-        'step': StepFun(lambda x: args.decay_rate * x, 50),
-        'inv': InverseDecay(args.learning_rate, args.decay_rate),
+    network_kwargs = {
+        'cost_fun': 'euclidean',
+        'nHL': args.hidden_layers,
+        'act_fun': args.hidden_act,
+        'outact_fun': args.output_act,
     }
 
     learning_kwargs = {
         'learning_rate': args.learning_rate,
         'momentum': args.momentum,
-        'decay_fun': functions[args.decay],
+        'decay_fun': args.decay,
+        'decay_rate': args.decay_rate,
 
         'batch_size': args.batch_size,
         'iterations': args.iterations,
@@ -206,4 +218,4 @@ if __name__ == "__main__":
         'verbose_lvl': args.verbose_lvl,
         'verbose_step': args.verbose_step,
     }
-    main(csv_path, label_col, hidden_layers, learning_kwargs)
+    main(csv_path, label_col, network_kwargs, learning_kwargs)

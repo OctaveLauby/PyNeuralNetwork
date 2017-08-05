@@ -1,12 +1,35 @@
 import numpy as np
 import random
 
+from collection import DECAY_FUN_CREATORS, StepFun
+from utils.params_manager import read_params
+
 from .base import NContainer
 from .layer import NLayer
 
 
 class NNetwork(NContainer):
     """Neural Network using backpropagation algorithm."""
+
+    dft_fit_params = {
+        # Weights and bias updating
+        'learning_rate': 0.001,
+        'momentum': 0,
+
+        # Learning rate updating
+        'decay_fun': 'id',
+        'decay_rate': None,
+        'decay_step': 1,
+
+        # Learning loop
+        'batch_size': 1,
+        'iterations': 1,
+        'shuffle': True,
+
+        # Display
+        'verbose_lvl': 1,
+        'verbose_step': 1,
+    }
 
     def __init__(self, dim_in, dim_out, cost_fun, cost_jac):
         """Create a neural network.
@@ -88,51 +111,68 @@ class NNetwork(NContainer):
             for output, expected_output in zip(outputs, output_set)
         ]
 
-    def fit(self, input_set, output_set,
-            learning_rate=0.001, momentum=0, decay_fun=None,  # update params
-            batch_size=1, iterations=1, shuffle=True,  # loop params
-            verbose_lvl=1, verbose_step=1,
-            ):
+    def fit(self, input_set, output_set, **fit_params):
         """
         Args:
             input_set (list of np.array[dim_in]):   list of input vectors
             output_set (list of np.array[dim_out]): associated outputs
 
-            learning_rate (float):  learning rate
-            momentum (float):       learning momentum, usually around 0.9
-            decay_fun (call):       function to update learning_rate
-                | float -> float
-                > default is identity
+            fit_params (dict): fitting parameters
+                @see NNetwork.dft_fit_params for default
+                learning_rate   (float)     learning rate
+                momentum        (float)     learning momentum (0.9 is good)
+                decay_fun       (str)       fun name (update learning_rate)
+                decay_rate      (float)     rate of decay of learning_rate
+                decay_step      (int)       iterations b/w each decay
 
-            batch_size (int):   size of input batch between each update
-            iterations (int):   browsing iterations on data
-            shuffle (boolean):  shuffle data_set when browsing it
+                batch_size      (int)       size of input batch b/w each update
+                iterations      (int)       iterations on data
+                shuffle         (bool)      shuffle data_set when browsing it
 
-            verbose_lvl (int):  the higher, the more it display
-                0 for None
-                1 for start and end display
-                2 for iteration display
-                3 for batch display
-            verbose_step (int): authorize display every x steps
+                verbose_lvl     (int)       the higher, the more it display
+                    0 for None
+                    1 for start and end display
+                    2 for iteration display
+                    3 for batch display
+                verbose_step    (int)       authorize display every x steps
         """
-        decay = decay_fun
-        if decay_fun is None:
-            def decay(x):
-                return x
         self.reset_memory()
-        assert len(input_set) == len(output_set)
         ds_size = len(input_set)  # size of dataset
-        assert ds_size > 0
+
+        params = read_params(fit_params, NNetwork.dft_fit_params)
+
+        verbose_lvl = params['verbose_lvl']
+        verbose_step = params['verbose_step']
+
+        learning_rate = params['learning_rate']
+        momentum = params['momentum']
+        decay_fun = params['decay_fun']
+        decay_rate = params['decay_rate']
+        decay_step = params['decay_step']
+        batch_size = params['batch_size']
+        iterations = params['iterations']
+        shuffle = params['shuffle']
 
         if verbose_lvl:
             print("# ---- Fitting on a data set of %s inputs:" % ds_size)
             print("\t learning_rate     %s" % learning_rate)
             print("\t momentum          %s" % momentum)
+
             print("\t decay_fun         %s" % decay_fun)
+            print("\t decay_rate        %s" % decay_rate)
+            print("\t decay_step        %s" % decay_step)
+
             print("\t batch_size        %s" % batch_size)
             print("\t iterations        %s" % iterations)
             print("\t shuffle           %s" % shuffle)
             print()
+
+        decay = StepFun(
+            DECAY_FUN_CREATORS[decay_fun](learning_rate, decay_rate),
+            verbose_step
+        )
+        assert len(input_set) == len(output_set)
+        assert ds_size > 0
 
         iteration = 0
         batch_costs = []
