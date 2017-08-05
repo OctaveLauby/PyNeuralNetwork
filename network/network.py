@@ -216,6 +216,7 @@ class NNetwork(NContainer):
 
             # End of iteration
             learning_rate = decay(learning_rate)
+
         if verbose_lvl:
             print(
                 "# Iteration {} | Mean cost : {} (l={})"
