@@ -54,11 +54,16 @@ def main(csv_path, label_col, hidden_layers, learning_kwargs):
     # Learning
 
     # Training
-    network.fit(
-        training_set.input_set,
-        training_set.output_set,
-        **learning_kwargs
-    )
+    try:
+        network.fit(
+            training_set.input_set,
+            training_set.output_set,
+            **learning_kwargs
+        )
+    except KeyboardInterrupt:
+        print()
+        print("/!\\ Fitting stopped. /!\\")
+        print()
 
     # Test
     predictions = network.predict(training_set.input_set)
