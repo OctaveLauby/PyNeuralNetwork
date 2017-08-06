@@ -2,7 +2,6 @@
 
 Examples in README
 """
-
 import argparse
 
 from network import HNN
@@ -17,11 +16,14 @@ def identity(x):
 def main(input_kwargs, network_kwargs, learning_kwargs):
     # ----------------------------------------------------------------------- #
     # DataSet reading
-    ds = DataSet(csv_path, label_col=label_col)
+    print("\n" + "#" * 64)
+
+    ds = DataSet(**input_kwargs)
     training_set, gene_set = ds.split(0.8)
 
-    print("**** Data :")
+    print("**** Data : %s" % input_kwargs)
     ds.display_struct()
+    # ds.head()
     print()
 
     print("**** Training Set :")
@@ -35,6 +37,8 @@ def main(input_kwargs, network_kwargs, learning_kwargs):
     # ----------------------------------------------------------------------- #
     # Initialization
     # Network
+    print("\n" + "#" * 64)
+
     network = HNN(
         dim_in=ds.dim_in,
         dim_out=ds.dim_out,
@@ -48,6 +52,7 @@ def main(input_kwargs, network_kwargs, learning_kwargs):
 
     # ----------------------------------------------------------------------- #
     # Learning
+    print("\n" + "#" * 64)
 
     # Training
     try:
@@ -100,8 +105,8 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
-        "-s", "--std_scale", type=str,
-        required=True,
+        "-s", "--std_scale", action='store_true',
+        required=False,
         help=(
             "rescale input with z-score normalization."
         ),
@@ -214,7 +219,7 @@ if __name__ == "__main__":
     input_kwargs = {
         'csv_path': args.file_path,
         'label_col': args.label_fieldname,
-        'std_der': args.std_der,
+        'std_scale': args.std_scale,
     }
     network_kwargs = {
         'cost_fun': 'euclidean',

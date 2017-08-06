@@ -56,6 +56,10 @@ class BaseDataSet(object):
         ]))
         print("\tSize       :", self.size)
 
+    def head(self):
+        for vector, output in zip(self.input_set[:10], self.output_set[:10]):
+            print(vector, "|", output)
+
     def labelize(self, vector_or_list):
         """Return label of vector or list of vectors."""
         if isinstance(vector_or_list, np.ndarray):
