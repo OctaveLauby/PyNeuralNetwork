@@ -38,9 +38,10 @@ The question of **performance is out of concern**, if one is looking for perform
 
 `python3 run.py -h`
 
-2. Run DNN on a data set with default options (1 hidden layer, ...):
+2. Pick your dataset: *-f -l -s*
+> We will use data/iris.csv, where label is given in in 'class' column. We can use the input normalisation (-s option) 
 
-`python3 run.py -f data/iris.csv -l class`
+`python3 run.py -f data/iris.csv -l class -s`
 
 
 3. Customize DNN: *-n --hidden_act --output_act*.
@@ -70,7 +71,7 @@ The question of **performance is out of concern**, if one is looking for perform
 `python3 run.py f data/iris.csv -l class --verbose_lvl 3 --verbose_step 50`
 
 8. Combinaison of those
-> My prefered setting is basically the default one
+> My prefered setting is basically the default one (+ the -s option to rescale input)
 > But one can combine all the options the way one wants
 
 
@@ -96,6 +97,8 @@ np.array[n] is a numpy array of n elements
 
 - Weight regulation
 - KeyInterruption -> set a new lambda or sth
+- Smart lambda decay (when cost is not moving for a while)
+- User can set layer sizes
 
 
 # Leads
