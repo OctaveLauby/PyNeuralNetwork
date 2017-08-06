@@ -111,6 +111,6 @@ class HNN(NNetwork):
             )
         return res[1:]  # skip first new line
 
-    def print_params(self):
+    def display_params(self):
         """Display params used to build network."""
         print(self.str_params())

@@ -4,7 +4,8 @@ from csv import DictReader
 
 class BaseDataSet(object):
 
-    def __init__(self, input_set, input_labels, dim_in, labels=None):
+    def __init__(self, input_set, input_labels, dim_in, labels=None,
+                 std_scale=False):
         self.input_set = input_set
         self.input_labels = input_labels
 
@@ -20,6 +21,9 @@ class BaseDataSet(object):
             self.vectorize(label)
             for label in self.input_labels
         ]
+
+        if std_scale:
+            self.std_scale()
 
         assert len(self.input_labels) == len(self.output_set)
         for vector in self.input_set:
@@ -119,19 +123,40 @@ class BaseDataSet(object):
                 training_labels,
                 dim_in=self.dim_in,
                 labels=self.labels,
+                std_scale=False,
             ),
             BaseDataSet(
                 generalisation_vectors,
                 generalisation_labels,
                 dim_in=self.dim_in,
                 labels=self.labels,
+                std_scale=False,
             ),
+        )
+
+    def stats(self):
+        """Return stats per column."""
+        vectors = np.array(self.input_set)
+        return {
+            'mean': np.array([
+                np.mean(vectors[:, i]) for i in range(self.dim_in)
+            ]),
+            'std_dev': np.array([
+                np.std(vectors[:, i]) for i in range(self.dim_in)
+            ]),
+        }
+
+    def std_scale(self):
+        stats = self.stats()
+        self.input_set = (
+            (self.input_set - stats['mean'])
+            / stats['std_dev']
         )
 
 
 class DataSet(BaseDataSet):
 
-    def __init__(self, csv_path, label_col, vector_cols=None):
+    def __init__(self, csv_path, label_col, vector_cols=None, std_scale=False):
         """Create dataset.
 
         Args:
@@ -139,6 +164,7 @@ class DataSet(BaseDataSet):
             label_col (str):    column name where to read label
             vector_cols (str):  names of columns to build vectors
                 > default is all columns except label col
+            std_scale (bool):   use z-score scaling
         """
         self.csv_path = csv_path
         self.label_col = label_col
@@ -164,6 +190,7 @@ class DataSet(BaseDataSet):
             self.input_set,
             self.input_labels,
             dim_in=len(self.vector_cols),
+            std_scale=std_scale,
         )
 
     def display_struct(self):

@@ -14,7 +14,7 @@ def identity(x):
     return x
 
 
-def main(csv_path, label_col, network_kwargs, learning_kwargs):
+def main(input_kwargs, network_kwargs, learning_kwargs):
     # ----------------------------------------------------------------------- #
     # DataSet reading
     ds = DataSet(csv_path, label_col=label_col)
@@ -42,7 +42,7 @@ def main(csv_path, label_col, network_kwargs, learning_kwargs):
     )
 
     print("**** Original Network :")
-    network.print_params()
+    network.display_params()
     network.pprint()
     print()
 
@@ -97,6 +97,13 @@ if __name__ == "__main__":
         required=True,
         help=(
             "column fieldname where to read label."
+        ),
+    )
+    parser.add_argument(
+        "-s", "--std_scale", type=str,
+        required=True,
+        help=(
+            "rescale input with z-score normalization."
         ),
     )
 
@@ -203,9 +210,12 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    csv_path = args.file_path  # "data/iris.csv"
-    label_col = args.label_fieldname  # "class"
 
+    input_kwargs = {
+        'csv_path': args.file_path,
+        'label_col': args.label_fieldname,
+        'std_der': args.std_der,
+    }
     network_kwargs = {
         'cost_fun': 'euclidean',
         'nHL': args.hidden_layers,
@@ -227,4 +237,4 @@ if __name__ == "__main__":
         'verbose_lvl': args.verbose_lvl,
         'verbose_step': args.verbose_step,
     }
-    main(csv_path, label_col, network_kwargs, learning_kwargs)
+    main(input_kwargs, network_kwargs, learning_kwargs)
