@@ -17,12 +17,14 @@ The question of **performance is out of concern**, if one is looking for perform
 **Script**: *run.py*
 
 **DataSet**: example are those in *data/*
+
 - ***csv*** file
 - with ***header***
 - ***','*** delimiter
 - ***number*** columns, except for label columns that can be anything
 
 **About**: Here are some things one does not need to handle:
+
 - ***Input space dimension*** is determined by the number of columns (- label column)
 - ***Output space dimension*** is determined by the number of labels
 - Input layer and output layer size match input and output dim
