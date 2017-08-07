@@ -4,6 +4,8 @@ from .functions import (
     sigmoid, sigmoid_der,
     tanh, tanh_der,
     arctan, arctan_der,
+    relu, relu_der,
+    softplus, softplus_der,
 )
 from .function_creators import (
     ExponentialDecay,
@@ -17,6 +19,8 @@ ACT_FUN_DER = {
     'sigmoid': (sigmoid, sigmoid_der),
     'tanh': (tanh, tanh_der),
     'arctan': (arctan, arctan_der),
+    'relu': (relu, relu_der),
+    'softplus': (softplus, softplus_der),
 }
 
 COST_FUN_DER = {

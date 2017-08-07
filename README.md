@@ -100,6 +100,7 @@ np.array[n] is a numpy array of n elements
 - Smart lambda decay (when cost is not moving for a while)
 - User can set layer sizes
 - Try new cost functions
+- softmax on the output
 
 
 # Leads
