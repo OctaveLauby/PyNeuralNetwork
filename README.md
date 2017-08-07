@@ -101,6 +101,7 @@ np.array[n] is a numpy array of n elements
 - User can set layer sizes
 - Try new cost functions
 - softmax on the output
+- Understand what is wrong is relu (try `python run.py -f data\abalone.csv -l sex -n 2 --hidden_act relu` vs `python run.py -f data\abalone.csv -l sex -n 2`). Learning rate too high ?
 
 
 # Leads
