@@ -11,7 +11,7 @@ from .network import NNetwork
 def default_init_fun(i):
     """Random float between -1 and 1"""
     if i == -1:
-        return 0.
+        return 0.01  # in case of relu activation func, to avoid dead neurons
     return 2 * random.random() - 1
 
 
