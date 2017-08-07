@@ -99,6 +99,7 @@ np.array[n] is a numpy array of n elements
 - KeyInterruption -> set a new lambda or sth
 - Smart lambda decay (when cost is not moving for a while)
 - User can set layer sizes
+- Try new cost functions
 
 
 # Leads
@@ -117,3 +118,4 @@ np.array[n] is a numpy array of n elements
 - (hyperparameters) http://colinraffel.com/wiki/neural_network_hyperparameters
 - (dataset) https://archive.ics.uci.edu/ml/datasets.html
 - (number of layers and nodes) http://dstath.users.uth.gr/papers/IJRS2009_Stathakis.pdf
+- (cost functions) https://stats.stackexchange.com/questions/154879/a-list-of-cost-functions-used-in-neural-networks-alongside-applications
